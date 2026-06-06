@@ -446,19 +446,19 @@
       <div class="story-track" id="story-track">
         <div class="story-panel" style="background:#111;">
           <h2>THE ORIGIN</h2>
-          <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070" alt="Origin">
+          <img src="https://picsum.photos/seed/origin/2070/1200" alt="Origin">
         </div>
         <div class="story-panel" style="background:#1a1a1a;">
           <h2>THE CRAFT</h2>
-          <img src="https://images.unsplash.com/photo-1618220179428-22790b46a0eb?q=80&w=2070" alt="Craft">
+          <img src="https://picsum.photos/seed/craft/2070/1200" alt="Craft">
         </div>
         <div class="story-panel" style="background:#222;">
           <h2>THE MATERIAL</h2>
-          <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2070" alt="Material">
+          <img src="https://picsum.photos/seed/material/2070/1200" alt="Material">
         </div>
         <div class="story-panel" style="background:#000;">
           <h2>THE PROMISE</h2>
-          <img src="https://images.unsplash.com/photo-1542435503-956c469947f6?q=80&w=2070" alt="Promise">
+          <img src="https://picsum.photos/seed/promise/2070/1200" alt="Promise">
         </div>
       </div>
     </div>
@@ -554,18 +554,27 @@
        DATA
        ========================================= */
     const products = [
-      { id: 1, name: "Midnight Candle", price: 1200, color: "#111", img: "https://images.unsplash.com/photo-1603006905003-be475563bc59?q=80&w=800" },
-      { id: 2, name: "Obsidian Vase", price: 3400, color: "#222", img: "https://images.unsplash.com/photo-1581783342308-f792db84d3bd?q=80&w=800" },
-      { id: 3, name: "Aura Lamp", price: 8500, color: "#ccff00", img: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?q=80&w=800" },
-      { id: 4, name: "Concrete Bowl", price: 1800, color: "#888", img: "https://images.unsplash.com/photo-1610701596007-11502861dcfa?q=80&w=800" },
-      { id: 5, name: "Moss Terrarium", price: 2100, color: "#4caf50", img: "https://images.unsplash.com/photo-1599304380614-2c0eb2dd9a50?q=80&w=800" },
-      { id: 6, name: "Glass Geode", price: 4200, color: "#00e5ff", img: "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=800" }
+      { id: 1, name: "Midnight Candle", price: 1200, color: "#111", img: "assets/midnight_candle_1780741095935.png" },
+      { id: 2, name: "Obsidian Vase", price: 3400, color: "#222", img: "assets/obsidian_vase_1780741109500.png" },
+      { id: 3, name: "Aura Lamp", price: 8500, color: "#ccff00", img: "assets/aura_lamp_1780741123105.png" },
+      { id: 4, name: "Concrete Bowl", price: 1800, color: "#888", img: "assets/concrete_bowl_1780741137584.png" },
+      { id: 5, name: "Moss Terrarium", price: 2100, color: "#4caf50", img: "assets/moss_terrarium_1780741152380.png" },
+      { id: 6, name: "Glass Geode", price: 4200, color: "#00e5ff", img: "assets/glass_geode_1780741165522.png" }
     ];
 
     let cart = [];
     let cartTotal = 0;
-    let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
-    let recentlyViewed = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
+    let wishlist = [];
+    try {
+      const w = JSON.parse(localStorage.getItem('wishlist'));
+      if (Array.isArray(w)) wishlist = w;
+    } catch(e) {}
+    
+    let recentlyViewed = [];
+    try {
+      const r = JSON.parse(localStorage.getItem('recentlyViewed'));
+      if (Array.isArray(r)) recentlyViewed = r;
+    } catch(e) {}
 
     /* =========================================
        INITIALIZATION
@@ -622,7 +631,13 @@
       typeWriter();
 
       setTimeout(() => {
-        document.getElementById("loader").classList.add("shatter");
+        const loader = document.getElementById("loader");
+        if (loader) {
+          loader.classList.add("shatter");
+          setTimeout(() => {
+            loader.style.display = "none";
+          }, 1500); // Give the shatter animation time to play before removing from flow
+        }
       }, 3000);
     }
 
@@ -663,8 +678,8 @@
           const x = e.clientX - rect.left;
           const y = e.clientY - rect.top;
           
-          card.style.setProperty('--x', \`\${x}px\`);
-          card.style.setProperty('--y', \`\${y}px\`);
+          card.style.setProperty('--x', `${x}px`);
+          card.style.setProperty('--y', `${y}px`);
           
           const centerX = rect.width / 2;
           const centerY = rect.height / 2;
@@ -672,12 +687,12 @@
           const rotateX = ((y - centerY) / centerY) * -10;
           const rotateY = ((x - centerX) / centerX) * 10;
           
-          card.style.transform = \`perspective(1000px) rotateX(\${rotateX}deg) rotateY(\${rotateY}deg)\`;
-          card.style.boxShadow = \`0 20px 40px rgba(0,0,0,0.4), 0 0 20px \${p.color}33\`;
+          card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+          card.style.boxShadow = `0 20px 40px rgba(0,0,0,0.4), 0 0 20px ${p.color}33`;
         });
         
         card.addEventListener('mouseleave', () => {
-          card.style.transform = \`perspective(1000px) rotateX(0) rotateY(0)\`;
+          card.style.transform = `perspective(1000px) rotateX(0) rotateY(0)`;
           card.style.boxShadow = 'none';
         });
 
@@ -847,15 +862,15 @@
       if (cart.length === 0) {
         container.innerHTML = '<div style="opacity:0.5; text-align:center; margin-top:2rem;">Your cart is lonely 🛍️</div>';
       } else {
-        container.innerHTML = cart.map((p, index) => \`
+        container.innerHTML = cart.map((p, index) => `
           <div style="display:flex; justify-content:space-between; margin-bottom:1rem; align-items:center;">
             <div style="display:flex; gap:1rem; align-items:center;">
-              <img src="\${p.img}" style="width:50px; height:50px; object-fit:cover; border-radius:4px;">
-              <div>\${p.name}</div>
+              <img src="${p.img}" style="width:50px; height:50px; object-fit:cover; border-radius:4px;">
+              <div>${p.name}</div>
             </div>
-            <div>₹\${p.price}</div>
+            <div>₹${p.price}</div>
           </div>
-        \`).join('');
+        `).join('');
       }
 
       checkCelebrations();
@@ -885,12 +900,12 @@
       document.querySelectorAll('.checkout-step').forEach(el => {
         el.classList.remove('active', 'exit-left');
       });
-      const target = document.getElementById(\`step-\${stepNum}\`);
+      const target = document.getElementById(`step-${stepNum}`);
       target.classList.add('active');
       
       // Animate previous out left
       if(stepNum > 1) {
-        document.getElementById(\`step-\${stepNum-1}\`).classList.add('exit-left');
+        document.getElementById(`step-${stepNum-1}`).classList.add('exit-left');
       }
     }
 
@@ -945,7 +960,7 @@
       container.innerHTML = "<div style='opacity:0.5; align-self:center; margin-right:2rem; font-size:0.8rem;'>Recently Viewed</div>" + 
         recentlyViewed.map(id => {
           const p = products.find(prod => prod.id === id);
-          return p ? \`<img src="\${p.img}">\` : '';
+          return p ? `<img src="${p.img}">` : '';
         }).join('');
     }
 
@@ -992,7 +1007,7 @@
         const val = e.target.value;
         const chat = document.getElementById('ai-chat');
         
-        chat.innerHTML += \`<div class="ai-msg user">\${val}</div>\`;
+        chat.innerHTML += `<div class="ai-msg user">${val}</div>`;
         e.target.value = '';
         
         // Scroll bottom
@@ -1011,7 +1026,7 @@
             response = "The Obsidian Vase is crafted from a single block. It's stunning.";
           }
 
-          chat.innerHTML += \`<div class="ai-msg bot">\${response}</div>\`;
+          chat.innerHTML += `<div class="ai-msg bot">${response}</div>`;
           chat.scrollTop = chat.scrollHeight;
         }, 1000);
       }
@@ -1030,7 +1045,7 @@
         if (rect.top <= 0 && rect.bottom >= window.innerHeight) {
           const scrollProgress = Math.abs(rect.top) / (rect.height - window.innerHeight);
           const moveX = scrollProgress * 300; // 300vw
-          track.style.transform = \`translateX(-\${moveX}vw)\`;
+          track.style.transform = `translateX(-${moveX}vw)`;
         }
       });
     }
